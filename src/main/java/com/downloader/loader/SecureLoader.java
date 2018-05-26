@@ -5,7 +5,7 @@ import com.jcraft.jsch.*;
 /**
  * Created by khwanchanok on 5/25/2018 AD.
  */
-public class SftpLoader extends Loader {
+public class SecureLoader extends CommonLoader {
 
     private String host;
     private int port;

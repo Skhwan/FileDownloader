@@ -1,6 +1,6 @@
 package com.downloader.integrationTest;
 
-import com.downloader.loader.Loader;
+import com.downloader.loader.CommonLoader;
 import org.junit.Test;
 
 /**
@@ -9,19 +9,24 @@ import org.junit.Test;
 public class LoaderTest {
 
     @Test
-    public void downloadHttpFileSuccess() throws Exception{
-        Loader httpLoader = new Loader();
+    public void downloadHttpFileSuccess() throws Exception {
+        CommonLoader httpCommonLoader = new CommonLoader();
         String targetUrl = "https://download.applied-maths.com/sites/default/files/download/Antibiotics%20sample%20data.zip";
-        String savePath = "/output.zip";
-        httpLoader.download(targetUrl, savePath);
+        String savePath = "./output.zip";
+        httpCommonLoader.download(targetUrl, savePath);
     }
 
     @Test
     public void downloadFtpFileSuccess() throws Exception {
-        Loader ftpLoader = new Loader();
+        CommonLoader ftpCommonLoader = new CommonLoader();
         String targetUrl = "ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/data/README_data_has_moved.md";
-        String savePath = "/output.md";
-        ftpLoader.download(targetUrl, savePath);
+        String savePath = "./output.md";
+        ftpCommonLoader.download(targetUrl, savePath);
+    }
+
+    @Test
+    public void downloadSftpFileSuccess() throws Exception {
+
     }
 
 }

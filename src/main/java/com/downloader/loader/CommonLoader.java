@@ -7,7 +7,7 @@ import java.net.URL;
 /**
  * Created by khwanchanok on 5/25/2018 AD.
  */
-public class Loader {
+public class CommonLoader {
 
     public void download(String url, String savePath) throws Exception {
         URL targetUrl = new URL(url);
