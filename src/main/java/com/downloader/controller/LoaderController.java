@@ -67,7 +67,9 @@ public class LoaderController {
     }
 
     public String generateDownloadReport(){
-        String report = "============= Download Complete =============\n";
+        String report =
+                "============= Download Complete =============\n" +
+                "All files are in " + savedPath + "\n";
         String failReport = null;
 
         for(String url:downloadMap.keySet()){
