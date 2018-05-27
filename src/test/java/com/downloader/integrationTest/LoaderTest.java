@@ -12,16 +12,16 @@ public class LoaderTest {
     public void downloadHttpFileSuccess() throws Exception {
         CommonLoader httpCommonLoader = new CommonLoader();
         String targetUrl = "https://download.applied-maths.com/sites/default/files/download/Antibiotics%20sample%20data.zip";
-        String savePath = "./output.zip";
-        httpCommonLoader.download(targetUrl, savePath);
+        String savedPath = "./output.zip";
+        httpCommonLoader.download(targetUrl, savedPath);
     }
 
     @Test
     public void downloadFtpFileSuccess() throws Exception {
         CommonLoader ftpCommonLoader = new CommonLoader();
         String targetUrl = "ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/data/README_data_has_moved.md";
-        String savePath = "./output.md";
-        ftpCommonLoader.download(targetUrl, savePath);
+        String savedPath = "./output.md";
+        ftpCommonLoader.download(targetUrl, savedPath);
     }
 
     @Test
