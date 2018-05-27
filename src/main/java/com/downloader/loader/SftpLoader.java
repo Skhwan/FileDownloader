@@ -10,19 +10,38 @@ import org.springframework.stereotype.Component;
 public class SftpLoader extends Loader {
 
     @Override
-    public void download(String url, String savedPath) throws Exception {
-        JSch jsch = new JSch();
-        Session session;
-        session = jsch.getSession(username, host, port);
-        session.setConfig("StrictHostKeyChecking", "no");
-        session.setPassword(password);
-        session.connect();
+    public boolean download(String url, String outputName) {
+        Session session = null;
+        ChannelSftp sftpChannel = null;
 
-        Channel channel = session.openChannel("sftp");
-        channel.connect();
-        ChannelSftp sftpChannel = (ChannelSftp) channel;
-        sftpChannel.get(url, savedPath);
-        sftpChannel.exit();
-        session.disconnect();
+        try {
+            JSch jsch = new JSch();
+            session = jsch.getSession(username, host, port);
+            session.setConfig("StrictHostKeyChecking", "no");
+            session.setPassword(password);
+            session.connect();
+
+            Channel channel = session.openChannel("sftp");
+            channel.connect();
+            sftpChannel = (ChannelSftp) channel;
+            sftpChannel.get(url, outputName);
+        }catch (JSchException e){
+            logger.error("Got error while connecting to host {}: {}", host, e.getMessage());
+            return false;
+        }catch (SftpException e){
+            logger.error("Got error while downloading SFTP file: {}", e.getMessage());
+            return false;
+        }catch (Exception e){
+            logger.error("Got unexpected error: {}", e.getMessage());
+            return false;
+        }finally {
+            if(sftpChannel!=null) {
+                sftpChannel.exit();
+            }
+            if (session!=null) {
+                session.disconnect();
+            }
+        }
+        return true;
     }
 }

@@ -20,7 +20,7 @@ public class LoaderTest {
     public void downloadFtpFileSuccess() throws Exception {
         CommonLoader ftpCommonLoader = new CommonLoader();
         String targetUrl = "ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/data/README_data_has_moved.md";
-        String savedPath = "./output.md";
+        String savedPath = "/output.md";
         ftpCommonLoader.download(targetUrl, savedPath);
     }
 

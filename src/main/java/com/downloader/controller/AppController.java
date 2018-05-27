@@ -1,17 +1,19 @@
 package com.downloader.controller;
 
 import com.downloader.util.ConfigProperty;
+import com.downloader.util.Protocol;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Scanner;
 
 /**
  * Created by khwanchanok on 5/26/2018 AD.
  */
 @Component
-public class PromptController {
+public class AppController {
 
     @Autowired
     LoaderController loaderController;
@@ -19,7 +21,7 @@ public class PromptController {
 
     @Value(ConfigProperty.MANUAL_PROMPT) String manualPrompt;
     @Value(ConfigProperty.PROTOCOL_PROMPT) String protocolPrompt;
-    @Value(ConfigProperty.SUPPORTED_PROTOCOL) int supportedProtocol;
+    @Value(ConfigProperty.SUPPORTED_PROTOCOL) List<String> supportedProtocol;
     @Value(ConfigProperty.SOURCE_FILE_PROMPT) String sourceFilePrompt;
     @Value(ConfigProperty.HOST_PROMPT) String hostPrompt;
     @Value(ConfigProperty.PORT_PROMPT) String portPrompt;
@@ -27,13 +29,14 @@ public class PromptController {
     @Value(ConfigProperty.PASSWORD_PROMPT) String passwordPrompt;
     @Value(ConfigProperty.FOOTER) String footer;
 
-    public PromptController(){
+    public AppController(){
         scanner = new Scanner(System.in);
     }
 
-    public void prompt() throws Exception {
+    public void doService() throws Exception {
         promptManual();
         promptForInput(getUserProtocol());
+        promptDownloadResult();
         promptFooter();
     }
 
@@ -45,8 +48,8 @@ public class PromptController {
         }while(!isReturn);
     }
 
-    private void promptForInput(int protocolNum) throws Exception {
-        if(protocolNum == 3){
+    private void promptForInput(String protocol) throws Exception {
+        if(Protocol.SFTP.name().equalsIgnoreCase(protocol)){
             promptForSecureLoader();
         }else{
             promptForCommonLoader();
@@ -79,18 +82,22 @@ public class PromptController {
         loaderController.secureDownload(sourcePath, host, port, username, password);
     }
 
+    private void promptDownloadResult(){
+        System.out.print(loaderController.generateDownloadReport());
+    }
+
     private void promptFooter(){
         System.out.println(footer);
     }
 
-    private int getUserProtocol(){
+    private String getUserProtocol(){
         System.out.print(protocolPrompt);
-        int protocolNum = scanner.nextInt();
-        while(!(protocolNum > 0 && protocolNum <= supportedProtocol)){
+        String protocol = scanner.next();
+        while(!supportedProtocol.contains(protocol.toUpperCase())){
             System.out.print(protocolPrompt);
-            protocolNum = scanner.nextInt();
+            protocol = scanner.next();
         }
-        return protocolNum;
+        return protocol;
     }
 
 }

@@ -7,7 +7,7 @@ public final class ConfigProperty {
 
     public static final String MANUAL_PROMPT = "${app.prompt.manual}";
     public static final String PROTOCOL_PROMPT = "${app.prompt.protocol}";
-    public static final String SUPPORTED_PROTOCOL = "${app.supportedProtocol}";
+    public static final String SUPPORTED_PROTOCOL = "#{'${app.supportedProtocol}'.split(',')}";
     public static final String SOURCE_FILE_PROMPT = "${app.prompt.sourceFile}";
     public static final String HOST_PROMPT = "${app.prompt.secure.host}";
     public static final String PORT_PROMPT = "${app.prompt.secure.port}";

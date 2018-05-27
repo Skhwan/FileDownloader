@@ -1,6 +1,6 @@
 package com.downloader;
 
-import com.downloader.controller.PromptController;
+import com.downloader.controller.AppController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.Banner;
 import org.springframework.boot.CommandLineRunner;
@@ -11,7 +11,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class FileDownloaderApplication implements CommandLineRunner {
 
 	@Autowired
-	PromptController promptController;
+	AppController appController;
 
 	public static void main(String[] args) {
 		SpringApplication app = new SpringApplication(FileDownloaderApplication.class);
@@ -21,6 +21,6 @@ public class FileDownloaderApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
-		promptController.prompt();
+		appController.doService();
 	}
 }
