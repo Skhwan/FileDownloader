@@ -1,6 +1,7 @@
 package com.downloader.loader;
 
 import com.downloader.util.DownloadReporter;
+import com.downloader.util.Protocol;
 import com.jcraft.jsch.*;
 import org.springframework.stereotype.Component;
 
@@ -14,7 +15,6 @@ public class SftpLoader extends Loader {
     public boolean download(String url, String outputName) {
         Session session = null;
         ChannelSftp sftpChannel = null;
-
         try {
             JSch jsch = new JSch();
             session = jsch.getSession(username, host, port);
@@ -22,18 +22,22 @@ public class SftpLoader extends Loader {
             session.setPassword(password);
             session.connect();
 
-            Channel channel = session.openChannel("sftp");
+            Channel channel = session.openChannel(Protocol.SFTP.name().toLowerCase());
             channel.connect();
             sftpChannel = (ChannelSftp) channel;
-            sftpChannel.get(url, outputName);
+            String sourceFile = getSourceFilePath(url);
+
+            DownloadReporter.startProgressReport(url);
+            sftpChannel.get(sourceFile, outputName);
+            DownloadReporter.stopProgressReport();
         }catch (JSchException e){
-            DownloadReporter.reportFailedDownload(url, e.getMessage());
+            DownloadReporter.reportFailedDownload(e.getMessage());
             return false;
         }catch (SftpException e){
-            DownloadReporter.reportFailedDownload(url, e.getMessage());
+            DownloadReporter.reportFailedDownload(e.getMessage());
             return false;
         }catch (Exception e){
-            DownloadReporter.reportFailedDownload(url, e.getMessage());
+            DownloadReporter.reportFailedDownload(e.getMessage());
             return false;
         }finally {
             if(sftpChannel!=null) {
@@ -43,7 +47,13 @@ public class SftpLoader extends Loader {
                 session.disconnect();
             }
         }
-        DownloadReporter.reportSuccessDownload(url);
+        DownloadReporter.reportSuccessDownload();
         return true;
+    }
+
+    private String getSourceFilePath(String url){
+        String sourceFile = url.substring(url.indexOf("/") + 2);
+        sourceFile = sourceFile.substring(sourceFile.indexOf("/"));
+        return sourceFile;
     }
 }

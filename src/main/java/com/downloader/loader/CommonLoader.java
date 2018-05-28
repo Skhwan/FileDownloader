@@ -24,14 +24,17 @@ public class CommonLoader extends Loader {
             fis = new FileOutputStream(outputName);
             byte[] buffer = new byte[1024];
             int count;
+
+            DownloadReporter.startProgressReport(url);
             while ((count = bis.read(buffer, 0, 1024)) != -1) {
                 fis.write(buffer, 0, count);
             }
+            DownloadReporter.stopProgressReport();
         }catch (IOException e){
-            DownloadReporter.reportFailedDownload(url, e.getMessage());
+            DownloadReporter.reportFailedDownload(e.getMessage());
             return false;
         }catch (Exception e){
-            DownloadReporter.reportFailedDownload(url, e.getMessage());
+            DownloadReporter.reportFailedDownload(e.getMessage());
             return false;
         }finally {
             try {
@@ -45,7 +48,7 @@ public class CommonLoader extends Loader {
                 logger.error("Got error while closing output stream: {}", e.getMessage());
             }
         }
-        DownloadReporter.reportSuccessDownload(url);
+        DownloadReporter.reportSuccessDownload();
         return true;
     }
 

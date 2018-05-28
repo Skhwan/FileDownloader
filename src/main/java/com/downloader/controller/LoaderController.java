@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.*;
 
 /**
  * Created by khwanchanok on 5/27/2018 AD.
@@ -28,6 +29,8 @@ public class LoaderController {
     @Autowired
     FileManager fileManager;
 
+    ExecutorService executorService = Executors.newFixedThreadPool(50);
+
     @Value(ConfigProperty.SAVED_PATH) private String savedPath;
     @Value(ConfigProperty.SUPPORTED_PROTOCOL) private List<String> supportedProtocol;
     private Map<String, Boolean> downloadMap;
@@ -37,17 +40,21 @@ public class LoaderController {
         Map<String, String> fileNames = fileManager.getDownloadNames();
         Map<String, Boolean> urls = fileManager.getDownloadStatusMap();
 
-        boolean downloadResult;
-        String outputName;
+        Future<Boolean> downloadResult;
         for (String url:urls.keySet()) {
             if(isCommonProtocol(url)) {
-                outputName = savedPath + fileNames.get(url);
-                downloadResult = commonLoader.download(url, outputName);
-                urls.put(url, downloadResult);
+                final String outputName = savedPath + fileNames.get(url);
+                downloadResult = executorService.submit(() -> commonLoader.download(url, outputName));
+                try {
+                    urls.put(url, downloadResult.get());
+                } catch (Exception e) {
+                    DownloadReporter.reportFailedDownload(url.concat(" ").concat(e.getMessage()));
+                }
             }else{
-                DownloadReporter.reportFailedDownload(url, "Unsupported protocol");
+                DownloadReporter.reportFailedDownload(url.concat(" Unsupported protocol"));
             }
         }
+        executorService.shutdown();
         downloadMap = fileManager.getDownloadStatusMap();
     }
 
@@ -58,17 +65,21 @@ public class LoaderController {
 
         sftpLoader.configDownload(host, port, username, password);
 
-        boolean downloadResult;
-        String outputName;
+        Future<Boolean> downloadResult;
         for (String url:urls.keySet()) {
             if(isSftp(url)) {
-                outputName = savedPath + fileNames.get(url);
-                downloadResult = sftpLoader.download(url, outputName);
-                urls.put(url, downloadResult);
+                String outputName = savedPath + fileNames.get(url);
+                downloadResult = executorService.submit(() -> sftpLoader.download(url, outputName));
+                try {
+                    urls.put(url, downloadResult.get());
+                } catch (Exception e) {
+                    DownloadReporter.reportFailedDownload(url.concat(" ").concat(e.getMessage()));
+                }
             }else{
-                DownloadReporter.reportFailedDownload(url, "Unsupported protocol");
+                DownloadReporter.reportFailedDownload(url.concat(" Unsupported protocol"));
             }
         }
+        executorService.shutdown();
         downloadMap = fileManager.getDownloadStatusMap();
     }
 
