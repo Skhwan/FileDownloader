@@ -1,5 +1,7 @@
 package com.downloader.util;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Component;
 
 import java.io.BufferedReader;
@@ -15,28 +17,43 @@ import java.util.Map;
 @Component
 public class FileManager {
 
+    Logger logger = LogManager.getLogger(FileManager.class);
+
     private Map<String, Boolean> urls;
     private Map<String, String> fileNames;
 
-    public void prepareFiles(String sourceFile, String savedPath) throws IOException {
+    public void prepareFiles(String sourceFile, String savedPath) {
 
         urls = new HashMap<>();
         fileNames = new HashMap<>();
 
-        FileReader fr = new FileReader(sourceFile);
-        BufferedReader br = new BufferedReader(fr);
+        FileReader fr = null;
+        BufferedReader br = null;
+        try {
+            fr = new FileReader(sourceFile);
+            br = new BufferedReader(fr);
+            String url;
+            String fileName;
 
-        String url;
-        String fileName;
-
-        while ((url = br.readLine()) != null) {
-            fileName = generateFileName(url, savedPath);
-            fileNames.put(url, fileName);
-            urls.put(url, false);
+            while ((url = br.readLine()) != null) {
+                fileName = generateFileName(url, savedPath);
+                fileNames.put(url, fileName);
+                urls.put(url, false);
+            }
+        }catch (IOException e){
+            DownloadReporter.reportException(e.getMessage());
+        }finally {
+            try {
+                if (br != null) {
+                    br.close();
+                }
+                if (fr != null) {
+                    fr.close();
+                }
+            }catch (IOException e){
+                logger.error("Got error while closing reader: {}", e.getMessage());
+            }
         }
-
-        br.close();
-        fr.close();
     }
 
     public String generateFileName(String url, String savedPath){

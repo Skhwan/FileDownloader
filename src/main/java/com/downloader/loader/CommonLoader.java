@@ -1,5 +1,6 @@
 package com.downloader.loader;
 
+import com.downloader.util.DownloadReporter;
 import org.springframework.stereotype.Component;
 
 import java.io.BufferedInputStream;
@@ -27,10 +28,10 @@ public class CommonLoader extends Loader {
                 fis.write(buffer, 0, count);
             }
         }catch (IOException e){
-            logger.error("Got error while downloading file: {}", e.getMessage());
+            DownloadReporter.reportFailedDownload(url, e.getMessage());
             return false;
         }catch (Exception e){
-            logger.error("Got unexpected error: {}", e.getMessage());
+            DownloadReporter.reportFailedDownload(url, e.getMessage());
             return false;
         }finally {
             try {
@@ -41,9 +42,10 @@ public class CommonLoader extends Loader {
                     bis.close();
                 }
             }catch (IOException e){
-                logger.error("Got error while closing input/output stream: {}", e.getMessage());
+                logger.error("Got error while closing output stream: {}", e.getMessage());
             }
         }
+        DownloadReporter.reportSuccessDownload(url);
         return true;
     }
 

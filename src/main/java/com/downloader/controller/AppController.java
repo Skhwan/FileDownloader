@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
 import java.util.Scanner;
 
 /**
@@ -21,7 +20,6 @@ public class AppController {
 
     @Value(ConfigProperty.MANUAL_PROMPT) String manualPrompt;
     @Value(ConfigProperty.PROTOCOL_PROMPT) String protocolPrompt;
-    @Value(ConfigProperty.SUPPORTED_PROTOCOL) List<String> supportedProtocol;
     @Value(ConfigProperty.SOURCE_FILE_PROMPT) String sourceFilePrompt;
     @Value(ConfigProperty.HOST_PROMPT) String hostPrompt;
     @Value(ConfigProperty.PORT_PROMPT) String portPrompt;
@@ -36,7 +34,6 @@ public class AppController {
     public void doService() throws Exception {
         promptManual();
         promptForInput(getUserProtocol());
-        promptDownloadResult();
         promptFooter();
     }
 
@@ -82,18 +79,16 @@ public class AppController {
         loaderController.secureDownload(sourcePath, host, port, username, password);
     }
 
-    private void promptDownloadResult(){
-        System.out.print(loaderController.generateDownloadReport());
-    }
-
     private void promptFooter(){
-        System.out.println(footer);
+        int[] stat = loaderController.generateDownloadStat();
+        int totalDownloads = stat[0] + stat[1];
+        System.out.printf(footer, stat[0], totalDownloads, loaderController.getSavedPath());
     }
 
     private String getUserProtocol(){
         System.out.print(protocolPrompt);
         String protocol = scanner.next();
-        while(!supportedProtocol.contains(protocol.toUpperCase())){
+        while(!loaderController.getSupportedProtocol().contains(protocol.toUpperCase())){
             System.out.print(protocolPrompt);
             protocol = scanner.next();
         }

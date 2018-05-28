@@ -1,5 +1,6 @@
 package com.downloader.loader;
 
+import com.downloader.util.DownloadReporter;
 import com.jcraft.jsch.*;
 import org.springframework.stereotype.Component;
 
@@ -26,13 +27,13 @@ public class SftpLoader extends Loader {
             sftpChannel = (ChannelSftp) channel;
             sftpChannel.get(url, outputName);
         }catch (JSchException e){
-            logger.error("Got error while connecting to host {}: {}", host, e.getMessage());
+            DownloadReporter.reportFailedDownload(url, e.getMessage());
             return false;
         }catch (SftpException e){
-            logger.error("Got error while downloading SFTP file: {}", e.getMessage());
+            DownloadReporter.reportFailedDownload(url, e.getMessage());
             return false;
         }catch (Exception e){
-            logger.error("Got unexpected error: {}", e.getMessage());
+            DownloadReporter.reportFailedDownload(url, e.getMessage());
             return false;
         }finally {
             if(sftpChannel!=null) {
@@ -42,6 +43,7 @@ public class SftpLoader extends Loader {
                 session.disconnect();
             }
         }
+        DownloadReporter.reportSuccessDownload(url);
         return true;
     }
 }
