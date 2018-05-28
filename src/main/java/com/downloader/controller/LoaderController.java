@@ -32,7 +32,8 @@ public class LoaderController {
     private Map<String, Boolean> downloadMap;
 
     public void download(String sourcePath) throws Exception {
-        Map<String, String> fileNames = fileManager.read(sourcePath);
+        fileManager.prepareFiles(sourcePath, savedPath);
+        Map<String, String> fileNames = fileManager.getDownloadNames();
         Map<String, Boolean> urls = fileManager.getDownloadStatusMap();
 
         boolean downloadResult;
@@ -49,7 +50,8 @@ public class LoaderController {
 
     public void secureDownload(String sourcePath, String host, int port, String username, String password) throws Exception {
 
-        Map<String, String> fileNames = fileManager.read(sourcePath);
+        fileManager.prepareFiles(sourcePath, savedPath);
+        Map<String, String> fileNames = fileManager.getDownloadNames();
         Map<String, Boolean> urls = fileManager.getDownloadStatusMap();
 
         sftpLoader.configDownload(host, port, username, password);
