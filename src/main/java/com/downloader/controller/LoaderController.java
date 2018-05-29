@@ -6,7 +6,6 @@ import com.downloader.util.ConfigProperty;
 import com.downloader.util.DownloadReporter;
 import com.downloader.util.FileManager;
 import com.downloader.util.Protocol;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -20,20 +19,24 @@ import java.util.concurrent.*;
 @Component
 public class LoaderController {
 
-    @Autowired
-    CommonLoader commonLoader;
+    @Value(ConfigProperty.SAVED_PATH)
+    private String savedPath;
 
-    @Autowired
-    SftpLoader sftpLoader;
+    @Value(ConfigProperty.SUPPORTED_PROTOCOL)
+    private List<String> supportedProtocol;
 
-    @Autowired
-    FileManager fileManager;
-
-    ExecutorService executorService = Executors.newFixedThreadPool(50);
-
-    @Value(ConfigProperty.SAVED_PATH) private String savedPath;
-    @Value(ConfigProperty.SUPPORTED_PROTOCOL) private List<String> supportedProtocol;
+    private FileManager fileManager;
+    private ExecutorService executorService;
     private Map<String, Boolean> downloadMap;
+    private CommonLoader commonLoader;
+    private SftpLoader sftpLoader;
+
+    public LoaderController(){
+        fileManager = new FileManager();
+        executorService = Executors.newFixedThreadPool(50);
+        commonLoader =  new CommonLoader();
+        sftpLoader = new SftpLoader();
+    }
 
     public void download(String sourcePath) {
         fileManager.prepareFiles(sourcePath, savedPath);
@@ -81,6 +84,7 @@ public class LoaderController {
         }
         executorService.shutdown();
         downloadMap = fileManager.getDownloadStatusMap();
+
     }
 
     public int[] generateDownloadStat(){
@@ -114,8 +118,16 @@ public class LoaderController {
         return false;
     }
 
+    public void setSavedPath(String savedPath){
+        this.savedPath = savedPath;
+    }
+
     public String getSavedPath(){
         return savedPath;
+    }
+
+    public void setSupportedProtocol(List<String> supportedProtocol){
+        this.supportedProtocol = supportedProtocol;
     }
 
     public List<String> getSupportedProtocol(){

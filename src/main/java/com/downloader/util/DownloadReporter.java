@@ -15,7 +15,7 @@ public final class DownloadReporter {
     }
 
     public static void reportFailedDownload(String cause){
-        System.out.printf("Failed...%s\n" + cause);
+        System.out.printf("Failed...%s\n", cause);
     }
 
     public static void reportException(String exception){

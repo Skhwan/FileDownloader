@@ -16,7 +16,7 @@ public class AppController {
 
     @Autowired
     LoaderController loaderController;
-    private Scanner scanner;
+    Scanner scanner;
 
     @Value(ConfigProperty.MANUAL_PROMPT) String manualPrompt;
     @Value(ConfigProperty.PROTOCOL_PROMPT) String protocolPrompt;
@@ -93,6 +93,10 @@ public class AppController {
             protocol = scanner.next();
         }
         return protocol;
+    }
+
+    public void setScanner(Scanner scanner){
+        this.scanner = scanner;
     }
 
 }

@@ -1,0 +1,1 @@
+ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/data/README_data_has_moved.md
