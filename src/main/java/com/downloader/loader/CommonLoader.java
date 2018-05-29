@@ -4,6 +4,7 @@ import com.downloader.util.DownloadReporter;
 import org.springframework.stereotype.Component;
 
 import java.io.BufferedInputStream;
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
@@ -18,6 +19,7 @@ public class CommonLoader extends Loader {
     public boolean download(String url, String outputName) {
         BufferedInputStream bis = null;
         FileOutputStream fis = null;
+        File file = new File(outputName);
         try {
             URL targetUrl = new URL(url);
             bis = new BufferedInputStream(targetUrl.openStream());
@@ -31,9 +33,11 @@ public class CommonLoader extends Loader {
             }
             DownloadReporter.stopProgressReport();
         }catch (IOException e){
+            file.delete();
             DownloadReporter.reportFailedDownload(e.getMessage());
             return false;
         }catch (Exception e){
+            file.delete();
             DownloadReporter.reportFailedDownload(e.getMessage());
             return false;
         }finally {
