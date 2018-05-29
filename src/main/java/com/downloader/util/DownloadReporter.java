@@ -30,6 +30,8 @@ public final class DownloadReporter {
     }
 
     public static void stopProgressReport(){
-        service.shutdown();
+        if(service!=null) {
+            service.shutdown();
+        }
     }
 }

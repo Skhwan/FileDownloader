@@ -40,7 +40,7 @@ public class FileManager {
                 fileNames.put(url, fileName);
                 urls.put(url, false);
             }
-        }catch (IOException e){
+        }catch (Exception e){
             DownloadReporter.reportException(e.getMessage());
         }finally {
             try {

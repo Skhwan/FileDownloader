@@ -32,12 +32,9 @@ public class CommonLoader extends Loader {
                 fis.write(buffer, 0, count);
             }
             DownloadReporter.stopProgressReport();
-        }catch (IOException e){
-            file.delete();
-            DownloadReporter.reportFailedDownload(e.getMessage());
-            return false;
         }catch (Exception e){
             file.delete();
+            DownloadReporter.stopProgressReport();
             DownloadReporter.reportFailedDownload(e.getMessage());
             return false;
         }finally {

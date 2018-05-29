@@ -35,16 +35,9 @@ public class SftpLoader extends Loader {
             DownloadReporter.startProgressReport(url);
             sftpChannel.get(sourceFile, fis);
             DownloadReporter.stopProgressReport();
-        }catch (JSchException e){
-            file.delete();
-            DownloadReporter.reportFailedDownload(e.getMessage());
-            return false;
-        }catch (SftpException e){
-            file.delete();
-            DownloadReporter.reportFailedDownload(e.getMessage());
-            return false;
         }catch (Exception e){
             file.delete();
+            DownloadReporter.stopProgressReport();
             DownloadReporter.reportFailedDownload(e.getMessage());
             return false;
         }finally {
@@ -59,7 +52,7 @@ public class SftpLoader extends Loader {
         return true;
     }
 
-    private String getSourceFilePath(String url){
+    public String getSourceFilePath(String url){
         String sourceFile = url.substring(url.indexOf("/") + 2);
         sourceFile = sourceFile.substring(sourceFile.indexOf("/"));
         return sourceFile;

@@ -27,11 +27,12 @@ public class LoaderController {
     @Value(ConfigProperty.SUPPORTED_PROTOCOL)
     private List<String> supportedProtocol;
 
-    private FileManager fileManager;
-    private ExecutorService executorService;
+    FileManager fileManager;
+    ExecutorService executorService;
+    CommonLoader commonLoader;
+    SftpLoader sftpLoader;
+
     private Map<String, Boolean> downloadMap;
-    private CommonLoader commonLoader;
-    private SftpLoader sftpLoader;
 
     public LoaderController(){
         fileManager = new FileManager();
@@ -104,7 +105,7 @@ public class LoaderController {
         return report;
     }
 
-    private boolean isCommonProtocol(String url){
+    public boolean isCommonProtocol(String url){
         String protocol = url.substring(0, url.indexOf(":"));
         if(supportedProtocol.contains(protocol.toUpperCase()) && !Protocol.SFTP.name().equalsIgnoreCase(protocol)){
             return true;
@@ -112,7 +113,7 @@ public class LoaderController {
         return false;
     }
 
-    private boolean isSftp(String url){
+    public boolean isSftp(String url){
         String protocol = url.substring(0, url.indexOf(":"));
         if(Protocol.SFTP.name().equalsIgnoreCase(protocol)){
             return true;
@@ -134,5 +135,9 @@ public class LoaderController {
 
     public List<String> getSupportedProtocol(){
         return supportedProtocol;
+    }
+
+    public void setDownloadMap(Map<String, Boolean> downloadMap) {
+        this.downloadMap = downloadMap;
     }
 }

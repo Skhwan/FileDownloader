@@ -95,8 +95,4 @@ public class AppController {
         return protocol;
     }
 
-    public void setScanner(Scanner scanner){
-        this.scanner = scanner;
-    }
-
 }
