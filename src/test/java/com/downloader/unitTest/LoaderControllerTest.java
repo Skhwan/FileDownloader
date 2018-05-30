@@ -1,15 +1,14 @@
 package com.downloader.unitTest;
 
 import com.downloader.controller.LoaderController;
+import com.downloader.util.Protocol;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.MockitoAnnotations;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -18,7 +17,7 @@ import java.util.Map;
 public class LoaderControllerTest {
 
     LoaderController loaderController;
-    List<String> supportedProtocol;
+    Map<String, String> supportedProtocol;
     String savedPath;
 
     @Before
@@ -26,11 +25,11 @@ public class LoaderControllerTest {
         MockitoAnnotations.initMocks(this);
         loaderController = new LoaderController();
         savedPath = "src/test/resources/output/";
-        supportedProtocol = new ArrayList<>();
-        supportedProtocol.add("HTTP");
-        supportedProtocol.add("HTTPS");
-        supportedProtocol.add("FTP");
-        supportedProtocol.add("SFTP");
+        supportedProtocol = new HashMap<>();
+        supportedProtocol.put(Protocol.HTTP.name(), Protocol.HTTP.name());
+        supportedProtocol.put(Protocol.HTTPS.name(), Protocol.HTTPS.name());
+        supportedProtocol.put(Protocol.FTP.name(), Protocol.FTP.name());
+        supportedProtocol.put(Protocol.SFTP.name(), Protocol.SFTP.name());
         loaderController.setSupportedProtocol(supportedProtocol);
         loaderController.setSavedPath(savedPath);
 

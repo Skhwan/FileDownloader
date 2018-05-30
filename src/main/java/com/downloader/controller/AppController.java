@@ -88,7 +88,7 @@ public class AppController {
     private String getUserProtocol(){
         System.out.print(protocolPrompt);
         String protocol = scanner.next();
-        while(!loaderController.getSupportedProtocol().contains(protocol.toUpperCase())){
+        while(loaderController.getSupportedProtocol().get(protocol.toUpperCase()) == null){
             System.out.print(protocolPrompt);
             protocol = scanner.next();
         }

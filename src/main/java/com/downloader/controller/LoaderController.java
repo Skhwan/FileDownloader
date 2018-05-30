@@ -9,7 +9,6 @@ import com.downloader.util.Protocol;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -25,7 +24,7 @@ public class LoaderController {
     private String savedPath;
 
     @Value(ConfigProperty.SUPPORTED_PROTOCOL)
-    private List<String> supportedProtocol;
+    private Map<String, String> supportedProtocol;
 
     FileManager fileManager;
     ExecutorService executorService;
@@ -107,7 +106,7 @@ public class LoaderController {
 
     public boolean isCommonProtocol(String url){
         String protocol = url.substring(0, url.indexOf(":"));
-        if(supportedProtocol.contains(protocol.toUpperCase()) && !Protocol.SFTP.name().equalsIgnoreCase(protocol)){
+        if((supportedProtocol.get(protocol.toUpperCase()) != null) && !Protocol.SFTP.name().equalsIgnoreCase(protocol)){
             return true;
         }
         return false;
@@ -129,11 +128,11 @@ public class LoaderController {
         return savedPath;
     }
 
-    public void setSupportedProtocol(List<String> supportedProtocol){
+    public void setSupportedProtocol(Map<String, String> supportedProtocol){
         this.supportedProtocol = supportedProtocol;
     }
 
-    public List<String> getSupportedProtocol(){
+    public Map<String, String> getSupportedProtocol(){
         return supportedProtocol;
     }
 
