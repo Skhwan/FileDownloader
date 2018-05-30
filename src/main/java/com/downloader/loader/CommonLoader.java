@@ -33,6 +33,7 @@ public class CommonLoader extends Loader {
             }
             DownloadReporter.stopProgressReport();
         }catch (Exception e){
+            //delete incomplete file if got exception while downloading
             file.delete();
             DownloadReporter.stopProgressReport();
             DownloadReporter.reportFailedDownload(e.getMessage());

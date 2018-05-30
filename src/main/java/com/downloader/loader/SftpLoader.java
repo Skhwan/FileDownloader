@@ -36,6 +36,7 @@ public class SftpLoader extends Loader {
             sftpChannel.get(sourceFile, fis);
             DownloadReporter.stopProgressReport();
         }catch (Exception e){
+            //delete incomplete file if got exception while downloading
             file.delete();
             DownloadReporter.stopProgressReport();
             DownloadReporter.reportFailedDownload(e.getMessage());
@@ -52,6 +53,10 @@ public class SftpLoader extends Loader {
         return true;
     }
 
+    /**
+     * @param url
+     * @return String path to target file on remote host
+     */
     public String getSourceFilePath(String url){
         String sourceFile = url.substring(url.indexOf("/") + 2);
         sourceFile = sourceFile.substring(sourceFile.indexOf("/"));

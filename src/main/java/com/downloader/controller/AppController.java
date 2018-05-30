@@ -34,7 +34,7 @@ public class AppController {
     public void doService() throws Exception {
         promptManual();
         promptForInput(getUserProtocol());
-        promptFooter();
+        promptDownloadResult();
     }
 
     private void promptManual(){
@@ -46,6 +46,7 @@ public class AppController {
     }
 
     private void promptForInput(String protocol) throws Exception {
+        //choose next prompt based on user protocol input
         if(Protocol.SFTP.name().equalsIgnoreCase(protocol)){
             promptForSecureLoader();
         }else{
@@ -79,7 +80,7 @@ public class AppController {
         loaderController.secureDownload(sourcePath, host, port, username, password);
     }
 
-    private void promptFooter(){
+    private void promptDownloadResult(){
         int[] stat = loaderController.generateDownloadStat();
         int totalDownloads = stat[0] + stat[1];
         System.out.printf(footer, stat[0], totalDownloads, loaderController.getSavedPath());
@@ -88,6 +89,7 @@ public class AppController {
     private String getUserProtocol(){
         System.out.print(protocolPrompt);
         String protocol = scanner.next();
+        //ask user for protocol till it is the supported one
         while(loaderController.getSupportedProtocol().get(protocol.toUpperCase()) == null){
             System.out.print(protocolPrompt);
             protocol = scanner.next();

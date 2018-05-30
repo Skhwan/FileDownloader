@@ -49,6 +49,8 @@ public class LoaderController {
         for (String url:urls.keySet()) {
             if(isCommonProtocol(url)) {
                 final String outputName = savedPath + fileNames.get(url);
+
+                //download task in new thread
                 downloadResult = executorService.submit(() -> commonLoader.download(url, outputName));
                 try {
                     urls.put(url, downloadResult.get());
@@ -74,6 +76,8 @@ public class LoaderController {
         for (String url:urls.keySet()) {
             if(isSftp(url)) {
                 String outputName = savedPath + fileNames.get(url);
+
+                //download task in new thread
                 downloadResult = executorService.submit(() -> sftpLoader.download(url, outputName));
                 try {
                     urls.put(url, downloadResult.get());

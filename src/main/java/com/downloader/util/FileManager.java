@@ -22,6 +22,10 @@ public class FileManager {
     private Map<String, Boolean> urls;
     private Map<String, String> fileNames;
 
+    /** Generate saved file name and initialize download status map
+     * @param sourceFile path to file containing download URL(s)
+     * @param savedPath path to saved location
+     */
     public void prepareFiles(String sourceFile, String savedPath) {
 
         urls = new HashMap<>();
@@ -56,6 +60,12 @@ public class FileManager {
         }
     }
 
+    /**
+     * Generate saved file name
+     * If it exist, then add number at the end of saved file name
+     * @param url
+     * @param savedPath
+    */
     public String generateFileName(String url, String savedPath){
         String fileName = url.substring(url.lastIndexOf("/") + 1, url.lastIndexOf("."));
         String fileType = url.substring(url.lastIndexOf("."));
