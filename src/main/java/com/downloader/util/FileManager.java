@@ -72,7 +72,7 @@ public class FileManager {
         String tmpName = fileName.concat(fileType);
         File file = new File(savedPath, tmpName);
         int sequence = 0;
-        while(file.exists()){
+        while(file.exists() || fileNames.containsValue(tmpName)){
             sequence++;
             tmpName = fileName.concat(Integer.toString(sequence)).concat(fileType);
             file = new File(savedPath, tmpName);

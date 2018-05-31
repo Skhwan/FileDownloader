@@ -2,14 +2,11 @@ package com.downloader.integrationTest;
 
 import com.downloader.controller.LoaderController;
 import com.downloader.util.Protocol;
-import org.apache.commons.io.FileUtils;
-import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -34,7 +31,7 @@ public class CommonDownloadTest {
     }
 
     @Test
-    public void downloadHttpFileSuccess() throws Exception {
+    public void downloadHttpFileSuccess() {
 
         sourceFile = "src/test/resources/input/http_source.txt";
         loaderController.setSavedPath(savedPath);
@@ -46,10 +43,11 @@ public class CommonDownloadTest {
         boolean fileExists = file.exists();
         Assert.assertTrue(fileExists);
 
+        file.delete();
     }
 
     @Test
-    public void downloadFtpFileSuccess() throws Exception {
+    public void downloadFtpFileSuccess() {
 
         sourceFile = "src/test/resources/input/ftp_source.txt";
         loaderController.setSavedPath(savedPath);
@@ -61,6 +59,8 @@ public class CommonDownloadTest {
         boolean fileExists = file.exists();
         Assert.assertTrue(fileExists);
 
+        file.delete();
+
     }
 
     @Test
@@ -71,8 +71,8 @@ public class CommonDownloadTest {
 
         loaderController.download(sourceFile);
 
-        File file = new File(savedPath + "Antibiotics%20sample%20data.zip");
-        boolean fileExists = file.exists();
+        File file1 = new File(savedPath + "Antibiotics%20sample%20data.zip");
+        boolean fileExists = file1.exists();
         Assert.assertTrue(fileExists);
 
         setUp();
@@ -81,9 +81,12 @@ public class CommonDownloadTest {
         loaderController.setSupportedProtocol(supportedProtocol);
         loaderController.download(sourceFile);
 
-        file = new File(savedPath + "Antibiotics%20sample%20data1.zip");
-        fileExists = file.exists();
+        File file2 = new File(savedPath + "Antibiotics%20sample%20data1.zip");
+        fileExists = file2.exists();
         Assert.assertTrue(fileExists);
+
+        file1.delete();
+        file2.delete();
     }
 
     @Test
@@ -97,6 +100,8 @@ public class CommonDownloadTest {
         File file = new File(savedPath + "readme.txt");
         boolean fileExists = file.exists();
         Assert.assertFalse(fileExists);
+
+        file.delete();
     }
 
     @Test
@@ -110,12 +115,8 @@ public class CommonDownloadTest {
         File file = new File(savedPath + "readme.txt");
         boolean fileExists = file.exists();
         Assert.assertFalse(fileExists);
-    }
 
-    @After
-    public void cleanUpOutputFolder() throws IOException {
-        File file = new File(savedPath);
-        FileUtils.cleanDirectory(file);
+        file.delete();
     }
 
 }

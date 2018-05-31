@@ -2,14 +2,11 @@ package com.downloader.integrationTest;
 
 import com.downloader.controller.LoaderController;
 import com.downloader.util.Protocol;
-import org.apache.commons.io.FileUtils;
-import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -33,7 +30,7 @@ public class SecureDownloadTest {
     }
 
     @Test
-    public void downloadSftpFileSuccess() throws Exception {
+    public void downloadSftpFileSuccess() {
 
         String host = "test.rebex.net";
         int port = 22;
@@ -47,6 +44,8 @@ public class SecureDownloadTest {
         File file = new File(savedPath + "readme.txt");
         boolean fileExists = file.exists();
         Assert.assertTrue(fileExists);
+
+        file.delete();
 
     }
 
@@ -64,6 +63,8 @@ public class SecureDownloadTest {
         File file = new File(savedPath + "readme.txt");
         boolean fileExists = file.exists();
         Assert.assertFalse(fileExists);
+
+        file.delete();
     }
 
     @Test
@@ -80,12 +81,8 @@ public class SecureDownloadTest {
         File file = new File(savedPath + "readme.txt");
         boolean fileExists = file.exists();
         Assert.assertFalse(fileExists);
-    }
 
-    @After
-    public void cleanUpOutputFolder() throws IOException {
-        File file = new File(savedPath);
-        FileUtils.cleanDirectory(file);
+        file.delete();
     }
 
 }

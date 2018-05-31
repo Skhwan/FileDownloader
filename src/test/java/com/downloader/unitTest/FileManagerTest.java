@@ -24,8 +24,11 @@ public class FileManagerTest {
 
     @Test
     public void generateFileNameCorrectly(){
+        String sourceFile = "src/test/resources/input/ftp_source.txt";
         String url = "http://test/test.txt";
         String savedPath = "src/test/resources/output/";
+
+        fileManager.prepareFiles(sourceFile, savedPath);
         String fileName = fileManager.generateFileName(url, savedPath);
 
         String expectedFileName = "test.txt";
@@ -34,19 +37,15 @@ public class FileManagerTest {
 
     @Test
     public void generateFileNameWithSequenceNumberCorrectly() throws IOException {
+        String sourceFile = "src/test/resources/input/mock_source.txt";
         String url = "http://test/test.txt";
         String savedPath = "src/test/resources/output/";
-        File file = new File(savedPath + "test.txt");
-        FileOutputStream fis = new FileOutputStream(file);
-        fis.write(1024);
 
+        fileManager.prepareFiles(sourceFile, savedPath);
         String fileName = fileManager.generateFileName(url, savedPath);
 
         String expectedFileName = "test1.txt";
         Assert.assertEquals(expectedFileName, fileName);
-
-        file.delete();
-        fis.close();
     }
 
     @Test
