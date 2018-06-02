@@ -31,7 +31,7 @@ public class AppController {
         scanner = new Scanner(System.in);
     }
 
-    public void doService() throws Exception {
+    public void doService() {
         promptManual();
         promptForInput(getUserProtocol());
         promptDownloadResult();
@@ -45,7 +45,7 @@ public class AppController {
         }while(!isReturn);
     }
 
-    private void promptForInput(String protocol) throws Exception {
+    private void promptForInput(String protocol) {
         //choose next prompt based on user protocol input
         if(Protocol.SFTP.name().equalsIgnoreCase(protocol)){
             promptForSecureLoader();
@@ -54,14 +54,14 @@ public class AppController {
         }
     }
 
-    private void promptForCommonLoader() throws Exception {
+    private void promptForCommonLoader() {
         System.out.print(sourceFilePrompt);
         String sourcePath = scanner.next();
 
         loaderController.download(sourcePath);
     }
 
-    private void promptForSecureLoader() throws Exception {
+    private void promptForSecureLoader() {
         System.out.print(sourceFilePrompt);
         String sourcePath = scanner.next();
 
